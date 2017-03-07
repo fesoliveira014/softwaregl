@@ -8,6 +8,7 @@ struct TGAHeader
 {
 	byte idLength;
 	byte colorMapType;
+    byte dataTypeCode;
 	byte imageType;
 	unsigned short colorMapOrigin;
 	unsigned short colorMapLength;
@@ -59,10 +60,10 @@ struct TGAColor
 	TGAColor operator *(float intensity) const 
 	{
 		TGAColor res = *this;
-		intensity = (intensity > 1.f ? 1.f : (intensity < 0 ? : 0.f, intensity));
+		intensity = (intensity > 1.f ? 1.f : (intensity < 0 ? 0.f : intensity));
 		
 		for (uint i = 0; i < 4; ++i)
-			res.brga[i] = brga[i] * intensity;
+			res.brga[i] = (byte)(brga[i] * intensity);
 
 		return res;
 	}
@@ -84,9 +85,10 @@ public:
 		GRAYSCALE=1, RGB=3, RGBA=4
 	};
 
-	TGAImage() {};
-	TGAImage(uint w, uint h, int bpp);
-	~TGAColor();
+	TGAImage();
+	TGAImage(uint w, uint h, uint bpp);
+    TGAImage(const TGAImage &img);
+	~TGAImage();
 
 	bool ReadFile(const char *filename);
 	bool WriteFile(const char *filename, bool rle=true);
