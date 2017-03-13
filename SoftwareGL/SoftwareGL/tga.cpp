@@ -113,7 +113,83 @@ bool TGAImage::ReadFile(const char *filename)
 
 bool TGAImage::WriteFile(const char* filename, bool rle)
 {
+    byte devAreaRef[4] = { 0,0,0,0 };
+    byte extensionAreaRef[4] = { 0,0,0,0 };
+    byte footer[18] = { 'T','R','U','E','V','I','S','I','O','N','-','X','F','I','L','E','.','\0' };
+    std::ofstream out;
 
+    out.open(filename, std::ios::binary);
+    out.imbue(std::locale::classic());
+    if (!out.is_open()) {
+        std::cerr << "Can't open file " << filename << "." << std::endl;
+        out.close();
+        return false;
+    }
+
+    TGAHeader header;
+    memset((void*)&header, 0, sizeof(header));
+
+    header.bitsPerPixel = (byte)(bytespp << 3);
+    header.width = (byte)width;
+    header.height = (byte)height;
+    header.dataTypeCode = (byte)(bytespp == GRAYSCALE ? (rle ? 11 : 3) : (rle ? 10 : 2));
+    header.imageDescriptor = 0x20; // top-left origin
+
+    std::cerr << "original data" << std::endl;
+    std::cerr << "  bpp         : " << std::hex << bytespp << std::endl;
+    std::cerr << "  width       : " << std::hex << width << std::endl;
+    std::cerr << "  height      : " << std::hex << height << std::endl;
+    std::cerr << "  dataTypeCode: " << std::hex << (bytespp == GRAYSCALE ? (rle ? 11 : 3) : (rle ? 10 : 2))  << std::endl;
+    std::cerr << "  imgDesc     : " << std::hex << 0x20 << std::endl;
+
+    std::cerr << std::endl;
+
+    std::cerr << "header" << std::endl;
+    std::cerr << "  bpp         : " << std::hex << (uint)header.bitsPerPixel << std::endl;
+    std::cerr << "  width       : " << std::hex << header.width << std::endl;
+    std::cerr << "  height      : " << std::hex << header.height << std::endl;
+    std::cerr << "  dataTypeCode: " << std::hex << (uint)header.dataTypeCode << std::endl;
+    std::cerr << "  imgDesc     : " << std::hex << (uint)header.imageDescriptor << std::endl;
+
+    out.write((char*)&header, sizeof(header));
+    if (!out.is_open()) {
+        std::cerr << "Can't open file " << filename << "." << std::endl;
+        out.close();
+        return false;
+    }
+
+    if (!rle) {
+        out.write((char*)data, width * height * bytespp);
+        if (!out.is_open()) {
+            std::cerr << "Can't open file " << filename << "." << std::endl;
+            out.close();
+            return false;
+        }
+    }
+
+    out.write((char*)devAreaRef, sizeof(devAreaRef));
+    if (!out.is_open()) {
+        std::cerr << "Can't open file " << filename << "." << std::endl;
+        out.close();
+        return false;
+    }
+
+    out.write((char*)extensionAreaRef, sizeof(extensionAreaRef));
+    if (!out.is_open()) {
+        std::cerr << "Can't open file " << filename << "." << std::endl;
+        out.close();
+        return false;
+    }
+
+    out.write((char*)footer, sizeof(footer));
+    if (!out.is_open()) {
+        std::cerr << "Can't open file " << filename << "." << std::endl;
+        out.close();
+        return false;
+    }
+
+    out.close();
+    return true;
 }
 
 bool TGAImage::RLELoadData(std::ifstream &in)
@@ -235,7 +311,7 @@ bool TGAImage::RLEUnloadData(std::ofstream &out)
 
 TGAColor TGAImage::Get(uint x, uint y)
 {
-    if (data == nullptr || x < 0 || y > 0 || x >= width || y >= height)
+    if (data == nullptr || x < 0 || y < 0 || x >= width || y >= height)
         return false;
 
     return TGAColor(data + (x + y * width) * bytespp, byte(bytespp));
@@ -243,7 +319,7 @@ TGAColor TGAImage::Get(uint x, uint y)
 
 bool TGAImage::Set(uint x, uint y, TGAColor &c)
 {
-    if (data == nullptr || x < 0 || y > 0 || x >= width || y >= height)
+    if (data == nullptr || x < 0 || y < 0 || x >= width || y >= height)
         return false;
 
     memcpy(data + (x + y * width) * bytespp, c.brga, bytespp);
@@ -252,7 +328,7 @@ bool TGAImage::Set(uint x, uint y, TGAColor &c)
 
 bool TGAImage::Set(uint x, uint y, const TGAColor &c)
 {
-    if (data == nullptr || x < 0 || y > 0 || x >= width || y >= height)
+    if (data == nullptr || x < 0 || y < 0 || x >= width || y >= height)
         return false;
 
     memcpy(data + (x + y * width) * bytespp, c.brga, bytespp);

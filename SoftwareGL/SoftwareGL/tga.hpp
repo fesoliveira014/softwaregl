@@ -9,7 +9,6 @@ struct TGAHeader
 	byte idLength;
 	byte colorMapType;
     byte dataTypeCode;
-	byte imageType;
 	unsigned short colorMapOrigin;
 	unsigned short colorMapLength;
 	byte colorMapDepth;
