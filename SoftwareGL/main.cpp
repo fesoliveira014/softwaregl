@@ -13,7 +13,7 @@ int main(int argc, char * argv[])
 
     raster::line(10, 20, 70, 40, image, white);
 
-    image.WriteFile("output.tga");
+    image.WriteFile("output.tga", false);
 
     return 0;
 }
