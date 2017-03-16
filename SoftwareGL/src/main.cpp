@@ -11,9 +11,9 @@ int main(int argc, char * argv[])
 
     //img.ReadFile("floor.tga");
 
-    raster::line(13, 20, 80, 40, image, white); 
-    raster::line(20, 13, 40, 80, image, red); 
-    raster::line(80, 40, 13, 20, image, red);
+    raster::line(glm::ivec2(13, 20), glm::ivec2(80, 40), image, white); 
+    raster::line(glm::ivec2(20, 13), glm::ivec2(40, 80), image, red); 
+    raster::line(glm::ivec2(80, 40), glm::ivec2(13, 20), image, red);
 
     image.WriteFile("output.tga", false);
 

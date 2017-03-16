@@ -15,26 +15,26 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="common.hpp">
+    <ClInclude Include="include\common.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tga.hpp">
+    <ClInclude Include="include\tga.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="tga.cpp">
+    <ClCompile Include="src\raster.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="raster.cpp">
+    <ClCompile Include="src\tga.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="raster.hpp">
+    <None Include="include\raster.hpp">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>
