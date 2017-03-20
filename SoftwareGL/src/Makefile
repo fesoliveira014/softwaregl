@@ -1,11 +1,11 @@
 CC = g++
 CFLAGS = -std=c++11 -c -Wall
 LDFLAGS =
-BIN = bin
-DIRS = bin
-SRCS = main.cpp tga.cpp
-INCDIR = -I ./
-INCS = common.hpp tga.hpp raster.hpp
+BIN = ../bin
+DIRS = ../bin
+SRCS = main.cpp tga.cpp model.cpp
+SRCDIR = src
+INCDIR = -I ../include
 OBJS = $(SRCS:.cpp=.o)
 EXEC = softgl.bin
 MKDIR_P = mkdir -p
