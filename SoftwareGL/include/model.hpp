@@ -33,13 +33,13 @@ public:
     size_t GetNumOfFaces();
 
     glm::vec3 Normal(int face, int vertice);
-    glm::vec3 Nomal(glm::vec2 uv);
+    glm::vec3 Normal(const glm::vec2 &uv);
     glm::vec3 GetVertice(int vertice);
     glm::vec3 GetVertice(int face, int vertice);
     glm::vec2 UV(int face, int vertice);
 
-    TGAColor GetDiffuse(glm::vec2 uv);
-    float GetSpecular(glm::vec2 uv);
+    TGAColor GetDiffuse(const glm::vec2 & uv);
+    float GetSpecular(const glm::vec2 & uv);
 
     face GetFace(int index);
 
@@ -53,7 +53,7 @@ private:
     TGAImage m_normalMap;
     TGAImage m_specularMap;
 
-    void LoadTexture(std::string filename, const char *suffix, TGAImage &image);
+    void LoadTexture(std::string filename, const char *suffix, TGAImage *image);
 };
 
 #endif

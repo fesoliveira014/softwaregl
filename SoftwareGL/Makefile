@@ -3,25 +3,26 @@ CFLAGS = -std=c++11 -c -Wall
 LDFLAGS =
 BIN = bin
 DIRS = bin
-SRCS = main.cpp tga.cpp
-INCDIR = -I ./
-INCS = common.hpp tga.hpp raster.hpp
+SRCS = $(shell find src -maxdepth 2 -name "*.cpp" -printf %f'\n')
+SRCDIR = src
+INCLUDE = -I include
 OBJS = $(SRCS:.cpp=.o)
 EXEC = softgl.bin
 MKDIR_P = mkdir -p
 RM = rm
+VPATH = src include
+MODULES = glm
 
-all: @echo=off directories $(SRCS) $(EXEC)
+all: @echo=off directories softgl
 
-$(EXEC): $(OBJS)
-	$(CC) $(LDFLAGS) $(addprefix $(BIN)/, $(OBJS)) $(INCDIR) -o ./$(BIN)/$@ 
+sofgl: $(OBJS)
+	$(CC) $(LDFLAGS) $(addprefix $(BIN)/, $(OBJS)) $(INCLUDE) -o ./$(BIN)/$@ 
 
-.cpp.o: $(BIN)
-	$(CC) $(CFLAGS) $(INCDIR) $< -o ./$(BIN)/$@ 
+.cpp.o: 
+	$(CC) $(CFLAGS) $(INCLUDE) $< -o ./$(BIN)/$@ 
 
 directories:
 	$(MKDIR_P) $(DIRS)
-    
 
 clean:
 	@echo=off $(RM) ./$(BIN)/*.bin ./$(BIN)/*.o;

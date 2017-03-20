@@ -57,9 +57,9 @@ Model::Model(std::string filename)
                  " vt# " << m_uv.size() <<
                  " vn# " << m_normals.size() << std::endl;
 
-    LoadTexture(filename, "_diffuse.tga", m_diffuseMap);
-    LoadTexture(filename, "_nm_tangent.tga", m_normalMap);
-    LoadTexture(filename, "_specular.tga", m_specularMap);
+    LoadTexture(filename, "_diffuse.tga", &m_diffuseMap);
+    LoadTexture(filename, "_nm_tangent.tga", &m_normalMap);
+    LoadTexture(filename, "_specular.tga", &m_specularMap);
 }
 
 Model::~Model() {}
@@ -72,4 +72,49 @@ size_t Model::GetNumOfVertices()
 size_t Model::GetNumOfFaces()
 {
     return m_faces.size();
+}
+
+glm::vec3 Model::Normal(int face, int vertice)
+{
+
+}
+
+glm::vec3 Model::Normal(const glm::vec2 &uv)
+{
+
+}
+
+glm::vec3 Model::GetVertice(int vertice)
+{
+
+}
+
+glm::vec3 Model::GetVertice(int face, int vertice)
+{
+
+}
+
+glm::vec2 Model::UV(int face, int vertice)
+{
+
+}
+
+TGAColor Model::GetDiffuse(const glm::vec2 & uv)
+{
+
+}
+
+float Model::GetSpecular(const glm::vec2 & uv)
+{
+
+}
+
+Model::face Model::GetFace(int index)
+{
+
+}
+
+void Model::LoadTexture(std::string filename, const char *suffix, TGAImage *image)
+{
+    return;
 }
