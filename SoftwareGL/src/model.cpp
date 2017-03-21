@@ -7,8 +7,10 @@ Model::Model(std::string filename)
     std::ifstream in;
     
     in.open(filename.c_str(), std::ifstream::in);
-    if (in.fail())
+    if (in.fail()) {
+        std::cerr << "Could not open the file " << filename << "." << std::endl;
         return;
+    }
 
     std::string line;
     while (!in.eof()) {
@@ -64,57 +66,75 @@ Model::Model(std::string filename)
 
 Model::~Model() {}
 
-size_t Model::GetNumOfVertices()
+const size_t Model::GetNumOfVertices()
 {
     return m_vertices.size();
 }
 
-size_t Model::GetNumOfFaces()
+const size_t Model::GetNumOfFaces()
 {
     return m_faces.size();
 }
 
-glm::vec3 Model::Normal(int face, int vertice)
+const glm::vec3& Model::Normal(int face, int vertex)
 {
-
+    int index = m_faces[face][vertex].normal;
+    return glm::normalize(m_normals[index]);
 }
 
-glm::vec3 Model::Normal(const glm::vec2 &uv)
+const glm::vec3& Model::Normal(const glm::vec2 &uv)
 {
+    glm::ivec2 uvi(uv[0] * m_normalMap.GetWidth(), uv[1] * m_normalMap.GetWidth());
+    TGAColor c = m_normalMap.Get(uvi.x, uvi.y);
 
+    glm::vec3 res;
+    for (int i = 0; i < 3; ++i) 
+        res[2 - i] = (float)c[i] / 255.0f * 2.0f - 1.0f;
+    
+    return res;
 }
 
-glm::vec3 Model::GetVertice(int vertice)
+const glm::vec3& Model::GetVertex(int vertex)
 {
-
+    return m_vertices[vertex];
 }
 
-glm::vec3 Model::GetVertice(int face, int vertice)
+const glm::vec3& Model::GetVertex(int face, int vertex)
 {
-
+    int index = m_faces[face][vertex].vertex;
+    return m_vertices[index];
 }
 
-glm::vec2 Model::UV(int face, int vertice)
+const glm::vec2& Model::UV(int face, int vertex)
 {
-
+    int index = m_faces[face][vertex].uv;
+    return m_uv[index];
 }
 
-TGAColor Model::GetDiffuse(const glm::vec2 & uv)
+const TGAColor &Model::GetDiffuse(const glm::vec2 & uv)
 {
-
+    glm::ivec2 uvi(uv[0] * m_diffuseMap.GetWidth(), uv[1] * m_diffuseMap.GetWidth());
+    return m_diffuseMap.Get(uvi.x, uvi.y);
 }
 
 float Model::GetSpecular(const glm::vec2 & uv)
 {
-
+    glm::ivec2 uvi(uv[0] * m_specularMap.GetWidth(), uv[1] * m_specularMap.GetWidth());
+    return m_specularMap.Get(uvi.x, uvi.y)[0] / 1.0f;
 }
 
 Model::face Model::GetFace(int index)
 {
-
+    return m_faces[index];
 }
 
 void Model::LoadTexture(std::string filename, const char *suffix, TGAImage *image)
 {
-    return;
+    std::string texFile(filename);
+    size_t dot = texFile.find_last_of(".");
+    if (dot != std::string::npos) {
+        texFile = texFile.substr(0, dot) + std::string(suffix);
+        std::cerr << "Texture file " << texFile << " loading " << (image->ReadFile(texFile.c_str()) ? "ok" : "failed") << std::endl;
+        image->FlipVertically();
+    }
 }

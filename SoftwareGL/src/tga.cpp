@@ -66,7 +66,11 @@ bool TGAImage::ReadFile(const char *filename)
 	height = header.height;
 	bytespp = header.bitsPerPixel >> 3;
 
-	if (width <= 0 || height << 0 || (bytespp != GRAYSCALE && bytespp != RGB && bytespp != RGBA)) {
+    std::cerr << "width:  " << width << std::endl;
+    std::cerr << "height: " << height << std::endl;
+    std::cerr << "height: " << bytespp << std::endl;
+
+	if (width <= 0 || height <= 0 || (bytespp != GRAYSCALE && bytespp != RGB && bytespp != RGBA)) {
 		in.close();
 		std::cerr << "Bad bbp (or width/height) value." << std::endl;
 		return false;

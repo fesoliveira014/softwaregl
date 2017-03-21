@@ -3,6 +3,7 @@
 
 #include "common.hpp"
 #include "tga.hpp"
+#include "model.hpp"
 
 namespace raster
 {
@@ -37,6 +38,28 @@ namespace raster
             if (error2 > dx) {
                 y += (b.y > a.y ? 1 : -1);
                 error2 -= dx * 2;
+            }
+        }
+    }
+
+    static void render(Model& model, TGAImage *image, bool wireframe = false)
+    {
+        TGAColor white = TGAColor(255, 255, 255, 255);
+
+        if (wireframe) {
+            for (int i = 0; i < model.GetNumOfFaces(); ++i) {
+                Model::face face = model.GetFace(i);
+                for (int j = 0; j < 3; ++j) {
+                    glm::vec3 v0 = model.GetVertex(face[j].vertex);
+                    glm::vec3 v1 = model.GetVertex(face[(j + 1) % 3].vertex);
+
+                    glm::ivec2 a((v0.x + 1.0f)* image->GetWidth() / 2.0f, (v0.y + 1.0f)* image->GetHeight() / 2.0f);
+                    glm::ivec2 b((v1.x + 1.0f)* image->GetWidth() / 2.0f, (v1.y + 1.0f)* image->GetHeight() / 2.0f);
+
+                    //std::cerr << "p1: " << glm::to_string(a) << ", p2: " << glm::to_string(b) << std::endl;
+
+                    line(a, b, image, white);
+                }
             }
         }
     }
