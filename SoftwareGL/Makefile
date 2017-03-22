@@ -25,7 +25,7 @@ directories:
 	$(MKDIR_P) $(DIRS)
 
 clean:
-	@echo=off $(RM) ./$(BIN)/*.bin ./$(BIN)/*.o;
+	@echo=off $(RM) ./$(BIN)/*;
 	
 
 # all: 

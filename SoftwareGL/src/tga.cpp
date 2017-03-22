@@ -66,10 +66,6 @@ bool TGAImage::ReadFile(const char *filename)
 	height = header.height;
 	bytespp = header.bitsPerPixel >> 3;
 
-    std::cerr << "width:  " << width << std::endl;
-    std::cerr << "height: " << height << std::endl;
-    std::cerr << "height: " << bytespp << std::endl;
-
 	if (width <= 0 || height <= 0 || (bytespp != GRAYSCALE && bytespp != RGB && bytespp != RGBA)) {
 		in.close();
 		std::cerr << "Bad bbp (or width/height) value." << std::endl;
@@ -83,8 +79,8 @@ bool TGAImage::ReadFile(const char *filename)
 		in.read((char*)data, nbytes);
 		if (!in.good()) {
 			in.close();
-		std::cerr << "An error occurred while reading the data." << std::endl;
-		return false;		
+            std::cerr << "An error occurred while reading the data." << std::endl;
+            return false;		
 		}
 	}
 
@@ -106,7 +102,7 @@ bool TGAImage::ReadFile(const char *filename)
 		FlipVertically();
 	}
 
-	if (!(header.imageDescriptor & 0x10)) {
+	if (header.imageDescriptor & 0x10) {
 		FlipHorizontally();
 	}
 
@@ -134,26 +130,26 @@ bool TGAImage::WriteFile(const char* filename, bool rle)
     memset((void*)&header, 0, sizeof(header));
 
     header.bitsPerPixel = (byte)(bytespp << 3);
-    header.width = (byte)width;
-    header.height = (byte)height;
+    header.width = (unsigned short)width;
+    header.height = (unsigned short)height;
     header.dataTypeCode = (byte)(bytespp == GRAYSCALE ? (rle ? 11 : 3) : (rle ? 10 : 2));
     header.imageDescriptor = 0x20; // top-left origin
 
     std::cerr << "original data" << std::endl;
-    std::cerr << "  bpp         : " << std::hex << bytespp << std::endl;
-    std::cerr << "  width       : " << std::hex << width << std::endl;
-    std::cerr << "  height      : " << std::hex << height << std::endl;
-    std::cerr << "  dataTypeCode: " << std::hex << (bytespp == GRAYSCALE ? (rle ? 11 : 3) : (rle ? 10 : 2))  << std::endl;
-    std::cerr << "  imgDesc     : " << std::hex << 0x20 << std::endl;
+    std::cerr << "  bpp         : 0x" << std::hex << bytespp << std::endl;
+    std::cerr << "  width       : 0x" << std::hex << width << std::endl;
+    std::cerr << "  height      : 0x" << std::hex << height << std::endl;
+    std::cerr << "  dataTypeCode: 0x" << std::hex << (bytespp == GRAYSCALE ? (rle ? 11 : 3) : (rle ? 10 : 2))  << std::endl;
+    std::cerr << "  imgDesc     : 0x" << std::hex << 0x20 << std::endl;
 
     std::cerr << std::endl;
 
     std::cerr << "header" << std::endl;
-    std::cerr << "  bpp         : " << std::hex << (uint)header.bitsPerPixel << std::endl;
-    std::cerr << "  width       : " << std::hex << header.width << std::endl;
-    std::cerr << "  height      : " << std::hex << header.height << std::endl;
-    std::cerr << "  dataTypeCode: " << std::hex << (uint)header.dataTypeCode << std::endl;
-    std::cerr << "  imgDesc     : " << std::hex << (uint)header.imageDescriptor << std::endl;
+    std::cerr << "  bpp         : 0x" << std::hex << (uint)header.bitsPerPixel << std::endl;
+    std::cerr << "  width       : 0x" << std::hex << header.width << std::endl;
+    std::cerr << "  height      : 0x" << std::hex << header.height << std::endl;
+    std::cerr << "  dataTypeCode: 0x" << std::hex << (uint)header.dataTypeCode << std::endl;
+    std::cerr << "  imgDesc     : 0x" << std::hex << (uint)header.imageDescriptor << std::endl;
 
     out.write((char*)&header, sizeof(header));
     if (!out.is_open()) {

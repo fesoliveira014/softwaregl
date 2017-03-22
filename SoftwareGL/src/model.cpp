@@ -76,13 +76,13 @@ const size_t Model::GetNumOfFaces()
     return m_faces.size();
 }
 
-const glm::vec3& Model::Normal(int face, int vertex)
+const glm::vec3 Model::Normal(int face, int vertex)
 {
     int index = m_faces[face][vertex].normal;
     return glm::normalize(m_normals[index]);
 }
 
-const glm::vec3& Model::Normal(const glm::vec2 &uv)
+const glm::vec3 Model::Normal(const glm::vec2 &uv)
 {
     glm::ivec2 uvi(uv[0] * m_normalMap.GetWidth(), uv[1] * m_normalMap.GetWidth());
     TGAColor c = m_normalMap.Get(uvi.x, uvi.y);
@@ -111,7 +111,7 @@ const glm::vec2& Model::UV(int face, int vertex)
     return m_uv[index];
 }
 
-const TGAColor &Model::GetDiffuse(const glm::vec2 & uv)
+const TGAColor Model::GetDiffuse(const glm::vec2 & uv)
 {
     glm::ivec2 uvi(uv[0] * m_diffuseMap.GetWidth(), uv[1] * m_diffuseMap.GetWidth());
     return m_diffuseMap.Get(uvi.x, uvi.y);

@@ -32,9 +32,10 @@ public:
             else if (i == 1)
                 return b;
             else if (i == 2)
-                return b;
+                return c;
             else
-                throw std::exception("Index out of bounds");
+                throw std::runtime_error("Index out of  bounds.");
+                //std::cerr << "Index out of bounds." << std::endl;
         }
     };
 
@@ -44,13 +45,13 @@ public:
     const size_t GetNumOfVertices();
     const size_t GetNumOfFaces();
 
-    const glm::vec3& Normal(int face, int vertex);
-    const glm::vec3& Normal(const glm::vec2 &uv);
+    const glm::vec3 Normal(int face, int vertex);
+    const glm::vec3 Normal(const glm::vec2 &uv);
     const glm::vec3& GetVertex(int vertex);
     const glm::vec3& GetVertex(int face, int vertex);
     const glm::vec2& UV(int face, int vertice);
 
-    const TGAColor &GetDiffuse(const glm::vec2 & uv);
+    const TGAColor GetDiffuse(const glm::vec2 & uv);
     float GetSpecular(const glm::vec2 & uv);
 
     face GetFace(int index);

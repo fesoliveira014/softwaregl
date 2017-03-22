@@ -47,9 +47,10 @@ namespace raster
         TGAColor white = TGAColor(255, 255, 255, 255);
 
         if (wireframe) {
-            for (int i = 0; i < model.GetNumOfFaces(); ++i) {
+            for (uint i = 0; i < model.GetNumOfFaces(); ++i) {
                 Model::face face = model.GetFace(i);
-                for (int j = 0; j < 3; ++j) {
+                
+                for (uint j = 0; j < 3; ++j) {
                     glm::vec3 v0 = model.GetVertex(face[j].vertex);
                     glm::vec3 v1 = model.GetVertex(face[(j + 1) % 3].vertex);
 
