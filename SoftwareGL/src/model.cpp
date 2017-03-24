@@ -32,22 +32,22 @@ Model::Model(std::string filename)
             for (int i = 0; i < 3; ++i) iss >> n[i];
             m_normals.push_back(n);
         }
-        else if (!line.compare(0, 2, "vt ")) {
-            iss >> trash;
+        else if (!line.compare(0, 3, "vt ")) {
+            iss >> trash >> trash;
             glm::vec2 uv;
 
             for (int i = 0; i < 2; ++i) iss >> uv[i];
             m_uv.push_back(uv);
         }
         else if (!line.compare(0, 2, "f ")) {
-            glvertex v[3];
+            modelVertex v[3];
             glm::vec3 tmp;
             iss >> trash;
             int j = 0;
 
             while (iss >> tmp[0] >> trash >> tmp[1] >> trash >> tmp[2]) {
                 for (int i = 0; i < 3; ++i) tmp[i]--;
-                v[j] = glvertex(tmp);
+                v[j] = modelVertex(tmp);
                 j++;
             }
             m_faces.push_back(face(v[0], v[1], v[2]));
@@ -61,7 +61,7 @@ Model::Model(std::string filename)
 
     LoadTexture(filename, "_diffuse.tga", &m_diffuseMap);
     LoadTexture(filename, "_nm_tangent.tga", &m_normalMap);
-    LoadTexture(filename, "_specular.tga", &m_specularMap);
+    LoadTexture(filename, "_spec.tga", &m_specularMap);
 }
 
 Model::~Model() {}
@@ -111,15 +111,20 @@ const glm::vec2& Model::UV(int face, int vertex)
     return m_uv[index];
 }
 
+const glm::vec2& Model::UV(int index)
+{
+	return m_uv[index];
+}
+
 const TGAColor Model::GetDiffuse(const glm::vec2 & uv)
 {
-    glm::ivec2 uvi(uv[0] * m_diffuseMap.GetWidth(), uv[1] * m_diffuseMap.GetWidth());
+    glm::ivec2 uvi(uv.x * m_diffuseMap.GetWidth(), uv.y * m_diffuseMap.GetHeight());
     return m_diffuseMap.Get(uvi.x, uvi.y);
 }
 
 float Model::GetSpecular(const glm::vec2 & uv)
 {
-    glm::ivec2 uvi(uv[0] * m_specularMap.GetWidth(), uv[1] * m_specularMap.GetWidth());
+	glm::ivec2 uvi(uv.x * m_diffuseMap.GetWidth(), uv.y * m_diffuseMap.GetHeight());
     return m_specularMap.Get(uvi.x, uvi.y)[0] / 1.0f;
 }
 

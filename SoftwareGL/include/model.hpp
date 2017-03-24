@@ -9,33 +9,38 @@
 class Model
 {
 public:
-    struct glvertex
+    struct modelVertex
     {
         int vertex, uv, normal;
 
-        glvertex() : vertex(0), uv(0), normal(0) {}
-        glvertex(glvertex const & v) : vertex(v.vertex), uv(v.uv), normal(v.normal) {}
-        glvertex(glm::ivec3 const & v) : vertex(v.x), uv(v.y), normal(v.z) {}
+        modelVertex() : vertex(0), uv(0), normal(0) {}
+        modelVertex(modelVertex const & v) : vertex(v.vertex), uv(v.uv), normal(v.normal) {}
+        modelVertex(glm::ivec3 const & v) : vertex(v.x), uv(v.y), normal(v.z) {}
     };
 
     struct face
     {
-        glvertex a, b, c;
+        modelVertex a, b, c;
 
         face() : a(), b(), c() {}
-        face(glvertex v1, glvertex v2, glvertex v3) : a(v1), b(v2), c(v3) {}
+        face(modelVertex v1, modelVertex v2, modelVertex v3) : a(v1), b(v2), c(v3) {}
 
-        glvertex& operator[](const int i)
+        modelVertex& operator[](const int i)
         {
-            if (i == 0)
-                return a;
-            else if (i == 1)
-                return b;
-            else if (i == 2)
-                return c;
-            else
-                throw std::runtime_error("Index out of  bounds.");
-                //std::cerr << "Index out of bounds." << std::endl;
+			try {
+				if (i == 0)
+					return a;
+				else if (i == 1)
+					return b;
+				else if (i == 2)
+					return c;
+				else
+					throw std::runtime_error("Index out of  bounds.");
+				//std::cerr << "Index out of bounds." << std::endl;
+			}
+			catch (std::exception &e) {
+				std::cerr << e.what() << std::endl;
+			}
         }
     };
 
@@ -50,6 +55,7 @@ public:
     const glm::vec3& GetVertex(int vertex);
     const glm::vec3& GetVertex(int face, int vertex);
     const glm::vec2& UV(int face, int vertice);
+	const glm::vec2& UV(int index);
 
     const TGAColor GetDiffuse(const glm::vec2 & uv);
     float GetSpecular(const glm::vec2 & uv);
