@@ -21,7 +21,7 @@ int main(int argc, char * argv[])
 
 
      TGAImage image(1024, 1024, TGAImage::RGB);
-     Model model(std::string(AFRICAN));
+     Model model(std::string(DIABLO));
 
      raster::render(model, &image, false);
     

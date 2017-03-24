@@ -87,10 +87,10 @@ namespace raster
 
         glm::vec3 u = glm::cross(glm::vec3(ac.x, ab.x, pa.x), glm::vec3(ac.y, ab.y, pa.y));
         
-        if (std::abs(u.z) <= 1e-2) 
-            return glm::vec3(-1,1,1);
+        if (std::abs(u.z) > 1e-2) 
+			return glm::vec3(1.f - (u.x + u.y)/u.z, u.y/u.z, u.x/u.z);
         
-        return glm::vec3(1.f - (u.x + u.y) / u.z, u.y / u.z, u.x/u.z);
+        return glm::vec3(-1,1,1);
     }
 
     static void triangle(const glvertex &t1, const glvertex &t2, const glvertex &t3, 
@@ -116,7 +116,7 @@ namespace raster
 				
 				if (zBuffer[index] < p.z) {
 					zBuffer[index] = p.z;
-					image->Set((int)p.x, (int)p.y, color);
+					image->Set(p.x, p.y, color);
 				}
             }
         }
@@ -147,7 +147,6 @@ namespace raster
 				index = int(p.x + p.y * image->GetWidth());
 
 				color = model.GetDiffuse(uv) * intensity;
-
 
 				if (zBuffer[index] < p.z) {
 					zBuffer[index] = p.z;
@@ -211,9 +210,9 @@ namespace raster
 					} 
 				};
 
-                glm::ivec3 a_pos((vertices[0].position.x + 1.0f)* image->GetWidth() / 2.0f, (vertices[0].position.y + 1.0f)* image->GetHeight() / 2.0f, vertices[0].position.z);
-				glm::ivec3 b_pos((vertices[1].position.x + 1.0f)* image->GetWidth() / 2.0f, (vertices[1].position.y + 1.0f)* image->GetHeight() / 2.0f, vertices[1].position.z);
-				glm::ivec3 c_pos((vertices[2].position.x + 1.0f)* image->GetWidth() / 2.0f, (vertices[2].position.y + 1.0f)* image->GetHeight() / 2.0f, vertices[2].position.z);
+                glm::vec3 a_pos(int((vertices[0].position.x + 1.0f)* image->GetWidth() / 2.0f + 0.5f), int((vertices[0].position.y + 1.0f)* image->GetHeight() / 2.0f + 0.5f), vertices[0].position.z);
+				glm::vec3 b_pos(int((vertices[1].position.x + 1.0f)* image->GetWidth() / 2.0f + 0.5f), int((vertices[1].position.y + 1.0f)* image->GetHeight() / 2.0f + 0.5f), vertices[1].position.z);
+				glm::vec3 c_pos(int((vertices[2].position.x + 1.0f)* image->GetWidth() / 2.0f + 0.5f), int((vertices[2].position.y + 1.0f)* image->GetHeight() / 2.0f + 0.5f), vertices[2].position.z);
 
 				glm::vec3 normal = glm::cross((vertices[2].position - vertices[0].position), (vertices[1].position - vertices[0].position));
 				normal = glm::normalize(normal);
@@ -227,8 +226,8 @@ namespace raster
 				shade = TGAColor((byte)(intensity * 255), (byte)(intensity * 255), (byte)(intensity * 255), 255);
 
 				if (intensity > 0)
-					//triangle(a, b, c, zBuffer, shade, image);
-					triangle(a, b, c, zBuffer, model, intensity, image);
+					triangle(a, b, c, zBuffer, shade, image);
+					//triangle(a, b, c, zBuffer, model, intensity, image);
             }
         }
 
