@@ -22,8 +22,10 @@ int main(int argc, char * argv[])
 
      TGAImage image(1024, 1024, TGAImage::RGB);
      Model model(std::string(DIABLO));
-
-     raster::render(model, &image, false);
+     
+     Rasterizer rasterizer(image);
+     
+     rasterizer.render(model, &image, false);
     
      image.FlipVertically();
      image.WriteFile("output.tga", false);

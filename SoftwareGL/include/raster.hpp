@@ -10,14 +10,14 @@
 class Rasterizer : public IRenderer
 {
 public:
-	Rasterizer(const TGAImage &image);
+	Rasterizer(TGAImage &image);
 	~Rasterizer();
 
-	virtual render();
+	virtual void render(Model& model, TGAImage *image, bool wireframe = false);
 
 	uint getWidth() { return m_width; }
 	uint getHeight() { return m_height; }
-	uint* getZBuffer() { return m_zBuffer; }
+	float * getZBuffer() { return m_zBuffer; }
 
 protected:
 	void line(const glm::ivec2 & aa, const glm::ivec2 & bb, TGAImage *image, TGAColor color);
@@ -30,7 +30,7 @@ protected:
 	void triangle(const glvertex &t1, const glvertex &t2, const glvertex &t3,
                         float *zBuffer, Model& model, float intensity, TGAImage *image);													
 
-	float * zBuffer;
+	float * m_zBuffer;
 	uint m_width, m_height;
 };
 

@@ -113,11 +113,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\camera.hpp" />
     <ClInclude Include="include\common.hpp" />
+    <ClInclude Include="include\model.hpp" />
+    <ClInclude Include="include\renderer.hpp" />
     <ClInclude Include="include\tga.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\camera.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model.cpp" />
     <ClCompile Include="src\raster.cpp" />
     <ClCompile Include="src\tga.cpp" />
   </ItemGroup>

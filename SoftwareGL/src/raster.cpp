@@ -1,13 +1,18 @@
 #include "raster.hpp"
 
-Rasterizer::Rasterizer(const TGAImage &image)
+Rasterizer::Rasterizer(TGAImage &image)
 {
     m_width = image.GetWidth();
     m_height = image.GetHeight();
 
     m_zBuffer = new float[m_width * m_height];
     for (uint i = 0; i < m_width * m_height; ++i)
-        zBuffer[i] = -std::numeric_limits<float>::max();
+        m_zBuffer[i] = -std::numeric_limits<float>::max();
+}
+
+Rasterizer::~Rasterizer()
+{
+    delete[] m_zBuffer;
 }
 
 void Rasterizer::line(const glm::ivec2 & aa, const glm::ivec2 & bb, TGAImage *image, TGAColor color)
@@ -150,9 +155,8 @@ void Rasterizer::render(Model& model, TGAImage *image, bool wireframe)
 
     glm::vec3 lightDir(0, 0, -1);
 
-    float * zBuffer = new float[image->GetWidth() * image->GetHeight()];
-    for (uint i = 0; i < image->GetWidth() * image->GetHeight(); ++i)
-        zBuffer[i] = -std::numeric_limits<float>::max();
+    for (uint i = 0; i < m_width * m_height; ++i)
+        m_zBuffer[i] = -std::numeric_limits<float>::max();
 
     for (uint i = 0; i < model.GetNumOfFaces(); ++i) {
         Model::face face = model.GetFace(i);
@@ -210,9 +214,7 @@ void Rasterizer::render(Model& model, TGAImage *image, bool wireframe)
 
             if (intensity > 0)
                 //triangle(a, b, c, zBuffer, shade, image);
-                triangle(a, b, c, zBuffer, model, intensity, image);
+                triangle(a, b, c, m_zBuffer, model, intensity, image);
         }
     }
-
-    delete[] zBuffer;
 }
